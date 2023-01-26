@@ -4,10 +4,10 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Results
+        title Favorites
         link(rel="stylesheet", href="/static/style.css")
     body 
-        a(href="/") Go back to search
+        a(href="/") Go back to search 
         table(cellspacing="0")
             tr 
                 th +
@@ -18,9 +18,9 @@ html(lang="en")
                 th Course Room
                 th Time
                 th Status
-            each match in matches
+            each match in favorites
                 tr
-                    td.btn= match.isFavorite ? "-" : "+"
+                    td.btn -
                     td(hidden)= match.Class
                     td= match.Course
                     td
