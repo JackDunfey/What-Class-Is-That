@@ -84,7 +84,7 @@ app.delete("/remove", (req,res)=>{
 app.get("/check", (req,res)=>{
     let day = req.query.day.toUpperCase(), 
         room = req.query.room.toUpperCase(),
-        time = time != "" ? time.toUpperCase() : null;
+        time = req.query.time != "" ? req.query.time.toUpperCase() : null;
     res.render("results", {
         matches: courses.filter(course=>{
             let isDay = course.Days.includes(day),
