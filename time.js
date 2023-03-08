@@ -38,4 +38,12 @@ function withinTimeRange(inputString, stringRange){
     return input[0] > times[0][0] && input[0] < times[1][0] || input[0] == times[0][0] && input[1] >= times[0][1] || input[0] == times[1][0] && input[1] <= times[1][1];
 }
 
-module.exports = withinTimeRange;
+function timeToNumber(timeString){
+    let time = stringToTime(timeString);
+    return time[0]*60 + time[1];
+}
+
+module.exports = {
+    withinTimeRange,
+    timeToNumber
+};

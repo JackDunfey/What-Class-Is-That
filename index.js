@@ -18,7 +18,7 @@ const fs = require("fs");
 const courses = JSON.parse(fs.readFileSync("courses.json").toString());
 let favorites = fs.readFileSync("favorites.json").toString();
 favorites = favorites != "" ? JSON.parse(favorites) : [];
-const withinTimeRange = require("./time.js");
+const {withinTimeRange, timeToNumber} = require("./time.js");
 const areSame = require("./areSame.js");
 
 const express = require('express');
@@ -82,16 +82,20 @@ app.delete("/remove", (req,res)=>{
 });
 
 app.get("/check", (req,res)=>{
-    let day = req.query.day.toUpperCase(), 
+    let days = new Array(5).fill(0).map((_,i)=>req.query[`day${i+1}`].toUpperCase()),
         room = req.query.room.toUpperCase(),
-        time = req.query.time != "" ? req.query.time.toUpperCase() : null;
+        time = req.query.time != "" ? req.query.time.toUpperCase() : null,
+        lectures_only = req.query.lectures_only,
+        include_clubs = req.query.clubs;
     res.render("results", {
         matches: courses.filter(course=>{
-            let isDay = course.Days.includes(day),
+            if(lectures_only && !course.Type.includes("LEC"))
+                return false;
+            let isDay = days.every(day=>course.Days.includes(day)),
                 isRoom = course.Room.includes(room),
                 isTime = time ? (!/[^APM\-0-9:\s]+/g.test(course.Time) ? withinTimeRange(time, course.Time) : false) : true;
-            return isDay && isRoom && isTime && course.Type == "LEC";
-        })
+            return isDay && isRoom && isTime;
+        }).sort((a,b)=>!/[^APM\-0-9:\s]+/g.test(a.Time) ? (!/[^APM\-0-9:\s]+/g.test(b.Time) ? (timeToNumber(a.Time.split(" - ")[0]) - timeToNumber(b.Time.split(" - ")[0])) : -1) : !/[^APM\-0-9:\s]+/g.test(b.Time) ? 1 : 0)
     });
 });
 
