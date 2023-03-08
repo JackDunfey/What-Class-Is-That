@@ -29,8 +29,6 @@ app.use(express.json());
 
 app.use("/static", express.static(`${__dirname}/public`))
 
-app.use("/events", require("./events.js"));
-
 app.set('views', '.');
 app.set('view engine', 'pug');
 
